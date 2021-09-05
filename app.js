@@ -63,3 +63,70 @@ const galleryItems = [
         description: 'Lighthouse Coast Sea',
     },
 ];
+
+// Разбей задание на несколько подзадач:
+// Создание и рендер разметки по массиву данных galleryItems из app.js и предоставленному шаблону.
+
+
+
+const galleryContainer = document.querySelector('ul.js-gallery')
+const modal = document.querySelector('.js-lightbox')
+const modalClose = document.querySelector('[data-action="close-lightbox"]')
+
+const galleryMarkup = galleryCollection(galleryItems);
+galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup)
+function galleryCollection(galleryItems) {
+    return galleryItems.map(({ preview, original, description }) => {
+        return `
+        <li class="gallery__item">
+        <a class="gallery__link" href="${preview}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</li>`}).join('');
+}
+// Реализация делегирования на галерее ul.js - gallery и получение url большого изображения.
+galleryContainer.addEventListener('click', onOpenModalClick)
+modalClose.addEventListener('click', closeModalClick)
+modalClose.addEventListener('keyword', closeModalClick)
+galleryContainer.addEventListener('click', onBackdropClick)
+
+// Открытие модального окна по клику на элементе галереи.
+function onOpenModalClick(event) {
+    window.addEventListener('keydown', onEscapePress)
+    event.preventDefault();
+    modal.classList.add('is-open')
+    const target = event.target;
+    console.log(target)
+}
+
+function onEscapePress(event) {
+    const ESC_KEY_CODE = 'Escape';
+    if (event.code === ESC_KEY_CODE) {
+        closeModalClick()
+    }
+}
+
+
+
+// Подмена значения атрибута src элемента img.lightbox__image.
+
+
+// Закрытие модального окна по клику на кнопку button[data - action= "close-lightbox"].
+
+function closeModalClick(event) {
+    modal.classList.remove('is-open')
+}
+
+function onBackdropClick(event) {
+    if (event.curentTarget === event.target) {
+        closeModalClick()
+    }
+}
+// Очистка значения атрибута src элемента img.lightbox__image.Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
+
+
