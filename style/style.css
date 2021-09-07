@@ -138,3 +138,24 @@ body {
 .lightbox__button:focus {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+
+.lightbox__arrow{
+  position: absolute;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 75px;
+  z-index: 1000;
+  border: none;
+  background-color: rgba(250, 250, 250, 0.3);
+  font-size: 45px;
+}
+
+.lightbox__arrow.lightbox__arrow-left {
+  top: 50%;
+  left: 15px;
+}
+.lightbox__arrow.lightbox__arrow-right {
+  top: 50%;
+  right: 15px;
+}
