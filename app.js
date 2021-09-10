@@ -99,12 +99,12 @@ refs.galleryArrowLeft.addEventListener('click', onClickArrowLeft)
 refs.galleryArrowRight.addEventListener('click', onClickArrowRight)
 
 function onOpenModalClick(event) {
-    // if (!event.target.classList.contains('gallery__image')) {
-    //     return;
-    // } else {
-    //    
-    // }
-    event.preventDefault();
+    if (!event.target.classList.contains('gallery__image')) {
+        return;
+    } else {
+        event.preventDefault();
+
+    }
     window.addEventListener('keydown', onEscapePress)
     refs.modal.classList.add('is-open')
     const target = event.target;
@@ -129,9 +129,9 @@ function onEscapePress(event) {
     if (event.code === RIGHT_ARROW) {
         onClickArrowRight()
     }
-    // if (event.code === 'scroll') {
-    //     onClickArrowRight()
-    // }
+    if (event.code === 'scroll') {
+        onClickArrowRight()
+    }
 }
 
 function closeModalClick(event) {
@@ -170,26 +170,26 @@ function onClickArrowLeft(event) {
     console.log(currentImgIndex)
 }
 
-// let scrollPosition = 0;
-// let counter = false;
-// const trottled = _.throttle(doSomething, 3000)
-// console.log(trottled)
-// function doSomething(scroll_pos) {
-//     if (scroll_pos.target === scroll_pos.currentTarget) {
-//         onClickArrowRight()
-//     } console.log(scroll_pos)
-// }
+let scrollPosition = 0;
+let counter = false;
+const trottled = _.throttle(doSomething, 3000)
+console.log(trottled)
+function doSomething(scroll_pos) {
+    if (scroll_pos.target === scroll_pos.currentTarget) {
+        onClickArrowRight()
+    } console.log(scroll_pos)
+}
 
 
-// window.addEventListener('scroll',
-//     function (e) {
-//         scrollPosition = window.scrollX;
-//         if (!counter) {
-//             window.requestAnimationFrame(function () {
-//                 doSomething(scrollPosition);
-//                 counter = false;
-//             });
-//             console.log(!counter)
-//             counter = true;
-//         }
-//     });
+window.addEventListener('scroll',
+    function (e) {
+        scrollPosition = window.scrollX;
+        if (!counter) {
+            window.requestAnimationFrame(function () {
+                doSomething(scrollPosition);
+                counter = false;
+            });
+            console.log(!counter)
+            counter = true;
+        }
+    });
