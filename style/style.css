@@ -100,7 +100,6 @@ body {
 
 .lightbox.is-open .lightbox__content {
   transform: scale(1);
-
 }
 
 .lightbox__image {
