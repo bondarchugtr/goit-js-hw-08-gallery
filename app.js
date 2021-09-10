@@ -69,8 +69,8 @@ const refs = {
     modalClose: document.querySelector('[data-action="close-lightbox"]'),
     imgModal: document.querySelector('img.lightbox__image'),
     closeBackdrop: document.querySelector('.lightbox__overlay'),
-    galleryArrowLeft: document.querySelector('[data-type="next"]'),
-    galleryArrowRight: document.querySelector('[data-action="change-image"]'),
+    galleryArrowLeft: document.querySelector('.lightbox__arrow-left'),
+    galleryArrowRight: document.querySelector('.lightbox__arrow-right'),
 
 }
 
@@ -98,35 +98,14 @@ refs.modalClose.addEventListener('keyword', closeModalClick)
 refs.closeBackdrop.addEventListener('click', onBackdropClick)
 refs.galleryArrowLeft.addEventListener('click', onClickArrowLeft)
 refs.galleryArrowRight.addEventListener('click', onClickArrowRight)
-// refs.galleryArrowLeft.addEventListener('keydown', onLeftArrowKey)
-// refs.galleryArrowRight.addEventListener('keydown', onRightArrowKey)
-
-// function onLeftArrowKey(event) {
-//     const LEFT_ARROW = 'ArrowLeft';
-//     if (event.code === LEFT_ARROW) {
-//         onClickArrowLeft()
-//     }
-// }
-function onRightArrowKey(event) {
-    const RIGHT_ARROW = 'ArrowRight';
-    if (event.code === RIGHT_ARROW) {
-        onClickArrowRight()
-    }
-}
 
 function onOpenModalClick(event) {
     window.addEventListener('keydown', onEscapePress)
     event.preventDefault();
-
     refs.modal.classList.add('is-open')
     const target = event.target;
-    onOpenImgModal(event.target.dataset.source, event.target.alt)
-    const LEFT_ARROW = 'ArrowLeft';
+    onOpenImgModal(target.dataset.source, target.alt)
 
-    if (event.target.classList.type === 'next') {
-        (event.code === LEFT_ARROW)
-        onClickArrowLeft()
-    }
 }
 
 function onOpenImgModal(src, alt) {
@@ -139,12 +118,22 @@ function onEscapePress(event) {
     if (event.code === ESC_KEY_CODE) {
         closeModalClick()
     }
+    const LEFT_ARROW = 'ArrowLeft';
+    if (event.code === LEFT_ARROW) {
+        onClickArrowLeft()
+    }
+
+    const RIGHT_ARROW = 'ArrowRight';
+    if (event.code === RIGHT_ARROW) {
+        onClickArrowRight()
+    }
 }
 
 function closeModalClick(event) {
     refs.modal.classList.remove('is-open')
     onOpenImgModal('', '')
 }
+
 function onBackdropClick(event) {
     if (event.target === event.currentTarget) {
         closeModalClick()
