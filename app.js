@@ -63,18 +63,14 @@ const galleryItems = [
         description: 'Lighthouse Coast Sea',
     },
 ];
-
-// Разбей задание на несколько подзадач:
-// Создание и рендер разметки по массиву данных galleryItems из app.js и предоставленному шаблону.
-
 const refs = {
     galleryContainer: document.querySelector('ul.js-gallery'),
     modal: document.querySelector('.js-lightbox'),
     modalClose: document.querySelector('[data-action="close-lightbox"]'),
     imgModal: document.querySelector('img.lightbox__image'),
     closeBackdrop: document.querySelector('.lightbox__overlay'),
-    galleryArrowLeft: document.querySelector('.lightbox__arrow-left'),
-    galleryArrowRight: document.querySelector('.lightbox__arrow-right'),
+    galleryArrowLeft: document.querySelector('[data-type="next"]'),
+    galleryArrowRight: document.querySelector('[data-action="change-image"]'),
 
 }
 
@@ -94,50 +90,49 @@ function galleryCollection(galleryItems) {
   </a>
 </li>`}).join('');
 
-
 }
-// Реализация делегирования на галерее ul.js - gallery и получение url большого изображения.
+
 refs.galleryContainer.addEventListener('click', onOpenModalClick)
 refs.modalClose.addEventListener('click', closeModalClick)
 refs.modalClose.addEventListener('keyword', closeModalClick)
 refs.closeBackdrop.addEventListener('click', onBackdropClick)
 refs.galleryArrowLeft.addEventListener('click', onClickArrowLeft)
 refs.galleryArrowRight.addEventListener('click', onClickArrowRight)
+// refs.galleryArrowLeft.addEventListener('keydown', onLeftArrowKey)
+// refs.galleryArrowRight.addEventListener('keydown', onRightArrowKey)
 
-// Открытие модального окна по клику на элементе галереи.
+// function onLeftArrowKey(event) {
+//     const LEFT_ARROW = 'ArrowLeft';
+//     if (event.code === LEFT_ARROW) {
+//         onClickArrowLeft()
+//     }
+// }
+function onRightArrowKey(event) {
+    const RIGHT_ARROW = 'ArrowRight';
+    if (event.code === RIGHT_ARROW) {
+        onClickArrowRight()
+    }
+}
+
 function onOpenModalClick(event) {
     window.addEventListener('keydown', onEscapePress)
     event.preventDefault();
+
     refs.modal.classList.add('is-open')
     const target = event.target;
     onOpenImgModal(event.target.dataset.source, event.target.alt)
+    const LEFT_ARROW = 'ArrowLeft';
 
-
+    if (event.target.classList.type === 'next') {
+        (event.code === LEFT_ARROW)
+        onClickArrowLeft()
+    }
 }
 
-// Подмена значения атрибута src элемента img.lightbox__image.
 function onOpenImgModal(src, alt) {
     refs.imgModal.src = src;
     refs.imgModal.alt = alt;
-    flipping()
 }
-
-function flipping(evt) {
-    if (
-        evt.target.classList.contains('lightbox__overlay') ||
-        evt.target.dataset.action === 'close-lightbox'
-    )
-        closeModal();
-    if (
-        evt.target.classList.contains('lightbox__image') ||
-        evt.target.dataset.type === 'next'
-    )
-        onClickArrowRight();
-    if (evt.target.dataset.type === 'prev') onClickArrowLeft();
-
-};
-
-
 
 function onEscapePress(event) {
     const ESC_KEY_CODE = 'Escape';
@@ -145,7 +140,7 @@ function onEscapePress(event) {
         closeModalClick()
     }
 }
-// Закрытие модального окна по клику на кнопку button[data - action= "close-lightbox"].
+
 function closeModalClick(event) {
     refs.modal.classList.remove('is-open')
     onOpenImgModal('', '')
@@ -156,52 +151,28 @@ function onBackdropClick(event) {
     }
     console.log(event)
 }
-// Очистка значения атрибута src элемента img.lightbox__image.Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
-//Сделать перелистывание фото
 
 function clickSearchRules(src) {
-
-    const searchRules = galleryItems.indexOf(galleryItems.find(el => el.original === refs.imgModal.src));
-    console.log(searchRules)
-
+    const searchRules = galleryItems.indexOf(galleryItems.find(el => el.original === src));
+    return searchRules;
 }
 
 function onClickArrowRight(src) {
     let currentImgIndex = clickSearchRules(refs.imgModal.getAttribute('src'));
-    if (currentImgIndex === galleryItems.length - 1) {
-        return currentImgIndex = -1;
-    }
+    if (currentImgIndex === galleryItems.length - 1) currentImgIndex = -1;
     onOpenImgModal(
         galleryItems[currentImgIndex + 1].original,
         galleryItems[currentImgIndex + 1].description,
     );
-
     console.log(currentImgIndex)
 }
 
-function onClickArrowLeft() {
+function onClickArrowLeft(event) {
     let currentImgIndex = clickSearchRules(refs.imgModal.getAttribute('src'));
-    if (currentImgIndex == 0) {
-        onOpenImgModal(
-            galleryItems[currentImgIndex - 1].original,
-            galleryItems[currentImgIndex - 1].description,
-        );
-    } else {
-        currentImgIndex = galleryItems.length;
-    }
+    if (currentImgIndex === 0) currentImgIndex = galleryItems.length
+    onOpenImgModal(
+        galleryItems[currentImgIndex - 1].original,
+        galleryItems[currentImgIndex - 1].description,
+    );
     console.log(currentImgIndex)
-}
-function onKeyDown(e) {
-    if (!modal.classList.contains('is-open')) return;
-    switch (e.code) {
-        case 'Escape':
-            closeModalClick();
-            break;
-        case 'ArrowLeft':
-            onClickArrowLeft();
-            break;
-        case 'ArrowRight':
-            onClickArrowRight();
-            break;
-    }
 }
