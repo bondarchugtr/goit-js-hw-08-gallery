@@ -89,7 +89,6 @@ function galleryCollection(galleryItems) {
     />
   </a>
 </li>`}).join('');
-
 }
 
 refs.galleryContainer.addEventListener('click', onOpenModalClick)
@@ -100,19 +99,23 @@ refs.galleryArrowLeft.addEventListener('click', onClickArrowLeft)
 refs.galleryArrowRight.addEventListener('click', onClickArrowRight)
 
 function onOpenModalClick(event) {
+    if (!event.target.classList.contains('gallery__image')) {
+        return;
+    } else {
+        event.preventDefault();
+    }
+
     window.addEventListener('keydown', onEscapePress)
-    event.preventDefault();
     refs.modal.classList.add('is-open')
     const target = event.target;
-    onOpenImgModal(target.dataset.source, target.alt)
-
+    onOpenImgModal(event.target.dataset.source, event.target.alt)
 }
+
 
 function onOpenImgModal(src, alt) {
     refs.imgModal.src = src;
     refs.imgModal.alt = alt;
 }
-
 function onEscapePress(event) {
     const ESC_KEY_CODE = 'Escape';
     if (event.code === ESC_KEY_CODE) {
@@ -122,9 +125,11 @@ function onEscapePress(event) {
     if (event.code === LEFT_ARROW) {
         onClickArrowLeft()
     }
-
     const RIGHT_ARROW = 'ArrowRight';
     if (event.code === RIGHT_ARROW) {
+        onClickArrowRight()
+    }
+    if (event.code === 'scroll') {
         onClickArrowRight()
     }
 }
@@ -133,35 +138,58 @@ function closeModalClick(event) {
     refs.modal.classList.remove('is-open')
     onOpenImgModal('', '')
 }
-
 function onBackdropClick(event) {
     if (event.target === event.currentTarget) {
         closeModalClick()
     }
-    console.log(event)
 }
-
 function clickSearchRules(src) {
-    const searchRules = galleryItems.indexOf(galleryItems.find(el => el.original === src));
-    return searchRules;
+    const searchForEntry = galleryItems.indexOf(galleryItems.find(el => el.original === src));
+    return searchForEntry;
 }
-
 function onClickArrowRight(src) {
     let currentImgIndex = clickSearchRules(refs.imgModal.getAttribute('src'));
-    if (currentImgIndex === galleryItems.length - 1) currentImgIndex = -1;
+    if (currentImgIndex === galleryItems.length - 1) {
+        currentImgIndex = -1;
+    }
     onOpenImgModal(
         galleryItems[currentImgIndex + 1].original,
         galleryItems[currentImgIndex + 1].description,
     );
     console.log(currentImgIndex)
 }
-
 function onClickArrowLeft(event) {
     let currentImgIndex = clickSearchRules(refs.imgModal.getAttribute('src'));
-    if (currentImgIndex === 0) currentImgIndex = galleryItems.length
+    if (currentImgIndex === 0) {
+        currentImgIndex = galleryItems.length
+    }
     onOpenImgModal(
         galleryItems[currentImgIndex - 1].original,
         galleryItems[currentImgIndex - 1].description,
     );
     console.log(currentImgIndex)
 }
+
+let scrollPosition = 0;
+let counter = false;
+const trottled = _.throttle(doSomething, 3000)
+console.log(trottled)
+function doSomething(scroll_pos) {
+    if (scroll_pos.target === scroll_pos.currentTarget) {
+        onClickArrowRight()
+    } console.log(scroll_pos)
+}
+
+
+window.addEventListener('scroll',
+    function (e) {
+        scrollPosition = window.scrollX;
+        if (!counter) {
+            window.requestAnimationFrame(function () {
+                doSomething(scrollPosition);
+                counter = false;
+            });
+            console.log(!counter)
+            counter = true;
+        }
+    });
