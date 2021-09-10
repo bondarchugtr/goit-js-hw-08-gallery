@@ -99,12 +99,12 @@ refs.galleryArrowLeft.addEventListener('click', onClickArrowLeft)
 refs.galleryArrowRight.addEventListener('click', onClickArrowRight)
 
 function onOpenModalClick(event) {
-    if (!event.target.classList.contains('gallery__image')) {
-        return;
-    } else {
-        event.preventDefault();
-    }
-
+    // if (!event.target.classList.contains('gallery__image')) {
+    //     return;
+    // } else {
+    //    
+    // }
+    event.preventDefault();
     window.addEventListener('keydown', onEscapePress)
     refs.modal.classList.add('is-open')
     const target = event.target;
